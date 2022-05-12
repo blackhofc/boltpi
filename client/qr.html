@@ -1,0 +1,68 @@
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="/socket.io/socket.io.js" ></script>
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles">
+</head>
+<body>
+
+
+<div class="form">
+  <h1>Scan with your device</h1>
+
+  <div id="qrcode-container">
+    <div id="qrcode" class="qrcode"></div>
+  </div>
+
+  <button type="button" class="test" id="btn_generate"; onclick="gen()" > Pay with BoltPay </button>
+
+  <script type="text/javascript">
+    
+
+    function gen(){
+      const key = uniqueId();
+      console.log('id ' + key)
+      let socket = io()
+      generateQRCode(key)
+      socket.on('key', (data)=>{
+          console.log('EL SOCKET KEY DICE:'+'\n'+data) 
+      })
+      
+      console.log('OK, ESCUCHANDO ID ' + key) 
+      socket.on(key, (data)=>{
+          console.log('Datos recibidos en> ' + key+'\n'+data) 
+      })
+        
+      
+    }
+
+
+    function uniqueId() {
+      length = 10
+      var result = '';
+      var characters= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+    }
+
+    function generateQRCode(unique_key) {
+        const btn = document.getElementById('btn_generate').style.display="none";
+        let qrcodeContainer = document.getElementById("qrcode");
+        qrcodeContainer.innerHTML = "";
+        new QRCode(qrcodeContainer, {
+          text: unique_key,
+          width: 350,
+          height: 350,
+          colorDark: "#34d186",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        document.getElementById("qrcode-container").style.display = "block";
+    }
+  </script>
+</div>
