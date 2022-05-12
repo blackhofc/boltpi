@@ -81,6 +81,6 @@ app.get('*', function(req, res){
   });
 
 server.listen(
-    PORT,
-    () => console.log('its alive on http://192.168.0.148:8080')
+    process.env.PORT || 3000,
+    () => console.log('BoltPay its alive')
 )
