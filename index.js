@@ -1,31 +1,60 @@
 const express = require('express');
-const app = express();
-const PORT = 8080;
-
-
-app.use(express.json())
-
+const mongoose = require('mongoose');
 const http = require('http')
-const server = http.createServer(app);
+
+const routes = require("./routes") 
+const Seller = require("./Schemas/seller")
 
 const {Server, Socket} = require('socket.io')
 
+const app = express();
+const PORT = 8080;
+
+// app.use(express.json())
+app.use("/api", routes) 
+
+const server = http.createServer(app);
+
 const io = new Server(server)
 
+const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
 
+
+mongoose
+	.connect(uri, { useNewUrlParser: true })
+	.then(() => {
+        server.listen(
+            process.env.PORT || 3000,
+            () => console.log('BoltPay its alive')
+        )
+})
+
+
+async function run(shopname){
+    const seller = new Seller(
+        {
+            "rapyd": {
+              "secret_key": null,
+              "acces_key": null
+            },
+            "shop_data": {
+              "shop_name": "Doll",
+              "contact_mail": null,
+              "contact_number": null,
+              "shop_adress": null,
+              "username": "mytestuserr",
+              "password": "supersecret"
+            },
+            "orders":[]
+          }
+    )
+    
+    seller.save().then(()=> console.log("Client saved!"))
+}
 
 app.post('/connect/:id', (req, res) => {
     const { id } = req.params;
     const data = JSON.stringify(req.body);
-    
-    // io.on('connection', (socket)=> {
-    //     console.log('connected '+socket.id)
-    //     socket.emit(id, data)
-    //     socket.on('chat', (msg)=>{
-    //        console.log('Mensaje: ' + msg)
-    //        socket.emit('chat', 'emito algo./.asd.')
-    //     })
-    // });
     console.log('post request with: '+ data)
 
     io.emit(id, data)
@@ -37,12 +66,12 @@ app.post('/connect/:id', (req, res) => {
     
 });
 
-app.get('/styles', (req, res) => {
-    res.sendFile(`${__dirname}/client/styles.css`)
-});
+app.get('/styles', (req, res) => { res.sendFile(`${__dirname}/client/styles.css`) });
 
-app.get('/qr', (req, res) => {
-    res.sendFile(`${__dirname}/client/qr.html`)
+app.get('/qr', (req, res) => { res.sendFile(`${__dirname}/client/qr.html`) });
+
+app.get('/pop', (req, res) => {
+    res.sendFile(`${__dirname}/client/popup.html`)
 });
 
 app.get('/home', (req, res) => {
@@ -71,16 +100,14 @@ app.post('/pucharse/:id', (req, res) => {
 
 });
 
-app.get('*', function(req, res){
-    res.status(404).send({
-        "error": {
-          "code": 404,
-          "message": `Some of the aliases you requested do not exist: ${req.url}`
-        }
-      });
-  });
+app.post('/create/:shopname', (req, res) => {
+    const { shopname } = req.params;
+    run(shopname)
+    res.send({  
+        "status": "ok"
+    })
+});
 
-server.listen(
-    process.env.PORT || 3000,
-    () => console.log('BoltPay its alive')
-)
+
+
+ 

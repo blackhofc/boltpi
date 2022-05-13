@@ -23,7 +23,6 @@
 
     function gen(){
       const key = uniqueId();
-      console.log('id ' + key)
       let socket = io()
       generateQRCode(key)
       socket.on('key', (data)=>{
@@ -34,13 +33,12 @@
       socket.on(key, (data)=>{
           console.log('Datos recibidos en> ' + key+'\n'+data) 
       })
-        
       
     }
 
 
     function uniqueId() {
-      length = 10
+      length = 20
       var result = '';
       var characters= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       var charactersLength = characters.length;
