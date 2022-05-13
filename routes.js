@@ -17,7 +17,16 @@ router.get('/awas', (req, res) => {
 
 router.get("/key/:id", async (req, res) => {
 	const seller = await Seller.findOne({ _id: req.params.id })
-	res.send(seller)
+  if(seller){
+    res.send(seller)
+  }else{
+    res.status(404).send({
+      "error": {
+        "code": 404,
+        "message": `Seller ${req.params.id} not found`
+      }
+    })
+  }
 })
 
 
@@ -27,9 +36,6 @@ router.get('*', function(req, res){
           "code": 404,
           "message": `Some of the aliases you requested do not exist: ${req.url}`
         }
-      });});
-
-
-
+});});
 
 module.exports = router

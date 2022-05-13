@@ -8,7 +8,6 @@ const Seller = require("./Schemas/seller")
 const {Server, Socket} = require('socket.io')
 
 const app = express();
-const PORT = 8080;
 
 // app.use(express.json())
 app.use("/api", routes) 
@@ -18,7 +17,6 @@ const server = http.createServer(app);
 const io = new Server(server)
 
 const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
-
 
 mongoose
 	.connect(uri, { useNewUrlParser: true })
@@ -56,7 +54,6 @@ app.post('/connect/:id', (req, res) => {
     const { id } = req.params;
     const data = JSON.stringify(req.body);
     console.log('post request with: '+ data)
-
     io.emit(id, data)
     res.send({
         "status": "ok",
