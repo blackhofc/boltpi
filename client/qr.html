@@ -21,8 +21,13 @@
   <script type="text/javascript">
     
     let socket = io()
-   
+    socket.on('c', (data)=>{
+        console.log(`Nuevo usuario conectado  ID: ${data}`);
+    })
 
+    socket.on('testchannel', (data)=>{
+        console.log(`OPAAA SE EMITIO POR EL TEST CHANNEL: ${data}`);
+    })
 
     function gen(){
       const key = uniqueId();
@@ -35,19 +40,13 @@
       
       console.log('OK, ESCUCHANDO ID ' + key) 
 
-      socket.on('connection', (data)=>{
-        alert( console.log('OPA ALGUIEN SE conect0 '+data.uniqueId) );
-    })
-
     socket.on("message", (data) => {
-    const packet = JSON.parse(data);
-
-    console.log("message "+packet.type)
+      console.log(data)
     });
 
-      socket.on(key, (data)=>{
+    socket.on(key, (data)=>{
           console.log('Datos recibidos en> ' + key+'\n'+data) 
-      })
+    }) 
       
     }
 

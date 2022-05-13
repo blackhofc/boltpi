@@ -21,14 +21,17 @@ const server = http.createServer(app);
 const io = new Server(server)
 
 io.on('connection', (data)=>{
-    console.log(`Nuevo usuario conectado  ${data.id} ${data.client.conn.server.clientsCount} usuarios conectados!`) 
+    console.log(`Nuevo usuario conectado  ${data.id} ${data.client.conn.server.clientsCount} usuarios conectados!`)
+    io.emit("c", `${data.id}`) 
 })
 
-io.on("message", (data) => {
-    const packet = JSON.parse(data);
+io.on('123321', (data)=>{
+    //io.emit("123321","te conectaste madafaker xdx") 
+})
+io.on('testchannel', (data)=>{
+    io.emit("testchannel", data) 
+})
 
-    console.log("message "+packet.type)
-  });
 
 mongoose
 	.connect(uri, { useNewUrlParser: true })
@@ -38,6 +41,8 @@ mongoose
             (socket) => console.log('BoltPay its alive')
         )
 })
+
+app.get('/check', (req, res) => { res.sendFile(`${__dirname}/comprobar.html`) });
 
 
 async function run(shopname){
