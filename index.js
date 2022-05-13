@@ -21,6 +21,7 @@ const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database
 mongoose
 	.connect(uri, { useNewUrlParser: true })
 	.then(() => {
+        console.log('conectado a '+process.env.PORT);
         server.listen(
             process.env.PORT || 3000,
             () => console.log('BoltPay its alive')
