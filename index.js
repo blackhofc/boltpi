@@ -18,8 +18,7 @@ const io = new Server(server)
 
 const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
 
-console.log('jasjdjadks');
-console.log('conectado a '+process.env.PORT);
+console.log('AAAconectado a '+process.env.PORT+"  " +process.env.Server+"   "+process.env.Server);
 mongoose
 	.connect(uri, { useNewUrlParser: true })
 	.then(() => {
