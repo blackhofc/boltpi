@@ -84,7 +84,7 @@ app.post('/connect/:id', (req, res) => {
 
 app.get('/styles', (req, res) => { res.sendFile(`${__dirname}/client/styles.css`) });
 
-app.get('/qr', (req, res) => { res.sendFile(`${__dirname}/client/qr.html`) });
+app.get('/', (req, res) => { res.sendFile(`${__dirname}/client/qr.html`) });
 
 app.get('/pop', (req, res) => {
     res.sendFile(`${__dirname}/client/popup.html`)
