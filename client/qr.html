@@ -20,17 +20,31 @@
 
   <script type="text/javascript">
     
+    let socket = io()
+   
+
 
     function gen(){
       const key = uniqueId();
-      let socket = io()
+     
       generateQRCode(key)
       socket.on('key', (data)=>{
           console.log('EL SOCKET KEY DICE:'+'\n'+data) 
       })
-      alert(key);
+      //alert(key);
       
       console.log('OK, ESCUCHANDO ID ' + key) 
+
+      socket.on('connection', (data)=>{
+        alert( console.log('OPA ALGUIEN SE conect0 '+data.uniqueId) );
+    })
+
+    socket.on("message", (data) => {
+    const packet = JSON.parse(data);
+
+    console.log("message "+packet.type)
+    });
+
       socket.on(key, (data)=>{
           console.log('Datos recibidos en> ' + key+'\n'+data) 
       })

@@ -1,30 +1,41 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const http = require('http')
 
 const routes = require("./routes") 
 const Seller = require("./Schemas/seller")
 
-const {Server, Socket} = require('socket.io')
 
 const app = express();
 
-// app.use(express.json())
+app.use(express.json())
 app.use("/api", routes) 
 
-const server = http.createServer(app);
 
-const io = new Server(server)
+
 
 const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
 
+const {Server, Socket} = require('socket.io')
+const http = require('http')
+const server = http.createServer(app);
+const io = new Server(server)
+
+io.on('connection', (data)=>{
+    console.log(`Nuevo usuario conectado  ${data.id} ${data.client.conn.server.clientsCount} usuarios conectados!`) 
+})
+
+io.on("message", (data) => {
+    const packet = JSON.parse(data);
+
+    console.log("message "+packet.type)
+  });
 
 mongoose
 	.connect(uri, { useNewUrlParser: true })
 	.then(() => {
         server.listen(
             process.env.PORT || 3000,
-            (socket) => console.log('BoltPay its alive '+socket)
+            (socket) => console.log('BoltPay its alive')
         )
 })
 
@@ -55,6 +66,8 @@ app.post('/connect/:id', (req, res) => {
     const { id } = req.params;
     const data = JSON.stringify(req.body);
     console.log('post request with: '+ data)
+
+   
     io.emit(id, data)
     res.send({
         "status": "ok",
