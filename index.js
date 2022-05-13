@@ -18,14 +18,13 @@ const io = new Server(server)
 
 const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
 
-console.log('AAAconectado a '+process.env.PORT+"  " +process.env.Server+"   "+process.env.Server);
+
 mongoose
 	.connect(uri, { useNewUrlParser: true })
 	.then(() => {
-       
         server.listen(
             process.env.PORT || 3000,
-            () => console.log('BoltPay its alive')
+            (socket) => console.log('BoltPay its alive '+socket)
         )
 })
 
