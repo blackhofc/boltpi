@@ -21,11 +21,16 @@ const sellerSchema = new mongoose.Schema({
     },
     "shop_adress": {
       "type": "Mixed"
-    },
+    }
+  },
+  "security": {
     "username": {
       "type": "Mixed"
     },
     "password": {
+      "type": "Mixed"
+    },
+    "acces_token": {
       "type": "Mixed"
     }
   },

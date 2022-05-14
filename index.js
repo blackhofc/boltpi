@@ -1,19 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
-const routes = require("./routes") 
-const Seller = require("./Schemas/seller")
 
+const routes = require("./routes") 
+const Seller = require("./Structures/seller")
 
 const app = express();
 
 app.use(express.json())
 app.use("/api", routes) 
 
-
-
-
-const uri = "mongodb+srv://demo:testpassword@cluster0.zvnbu.mongodb.net/database?retryWrites=true&w=majority";
 
 const {Server, Socket} = require('socket.io')
 const http = require('http')
@@ -25,27 +22,14 @@ io.on('connection', (data)=>{
     io.emit("c", `${data.id}`) 
 })
 
-io.on('123321', (data)=>{
-    //io.emit("123321","te conectaste madafaker xdx") 
-})
-io.on('testchannel', (data)=>{
-    io.emit("testchannel", data) 
-})
-
+io.on('testchannel', (data)=>{ io.emit("testchannel", data) })
 
 mongoose
-	.connect(uri, { useNewUrlParser: true })
-	.then(() => {
-        server.listen(
-            process.env.PORT || 3000,
-            (socket) => console.log('BoltPay its alive')
-        )
-})
-
-app.get('/check', (req, res) => { res.sendFile(`${__dirname}/comprobar.html`) });
+    .connect(process.env.URI, { useNewUrlParser: true })
+	.then(() => { server.listen(process.env.PORT || 3000,(socket) => console.log('BoltPay its alive')) })
 
 
-async function run(shopname){
+async function create_seller(shopname){
     const seller = new Seller(
         {
             "rapyd": {
@@ -53,77 +37,47 @@ async function run(shopname){
               "acces_key": null
             },
             "shop_data": {
-              "shop_name": "Doll",
+              "shop_name": "Benja insumos",
               "contact_mail": null,
               "contact_number": null,
-              "shop_adress": null,
-              "username": "mytestuserr",
-              "password": "supersecret"
+              "shop_adress": null
             },
-            "orders":[]
+            "security": {
+              "username": "benjatld",
+              "password": "1234",
+              "acces_token": "awas"
+            },
+            "orders": []
           }
     )
     
-    seller.save().then(()=> console.log("Client saved!"))
-}
+    seller.save().then(()=> console.log("Seller saved!")) }
+
+app.post('/create/:shopname', (req, res) => {
+  const { shopname } = req.params;
+  create_seller(shopname)
+  res.send({  
+      "status": "ok"
+  })
+});
 
 app.post('/connect/:id', (req, res) => {
     const { id } = req.params;
     const data = JSON.stringify(req.body);
     console.log('post request with: '+ data)
 
-   
     io.emit(id, data)
     res.send({
         "status": "ok",
-        "data": "x "+data,
+        "data": "x " + data,
         "send to": id
     })
     
 });
 
-app.get('/styles', (req, res) => { res.sendFile(`${__dirname}/client/styles.css`) });
 
-app.get('/', (req, res) => { res.sendFile(`${__dirname}/client/qr.html`) });
 
-app.get('/pop', (req, res) => {
-    res.sendFile(`${__dirname}/client/popup.html`)
-});
-
-app.get('/home', (req, res) => {
-   res.sendFile(`${__dirname}/client/index.html`)
-});
-
-app.get('/mycarts', (req, res) => {
-    res.status(200).send({
-        'id':'a-sd-b-3-32asdd',
-        'order_num': 33
-    })
-});
-
-app.post('/pucharse/:id', (req, res) => {
-    const { id } = req.params;
-    const { order_num } = req.body;
-
-    if(!order_num){
-        res.status(418).send({message:'Wee need an order number!'})
-    }
-    
-    res.send({  
-        "status": "ok",
-        "order_id": order_num
-    })
-
-});
-
-app.post('/create/:shopname', (req, res) => {
-    const { shopname } = req.params;
-    run(shopname)
-    res.send({  
-        "status": "ok"
-    })
-});
-
+app.get('/', (req, res) => { res.redirect('/api') });
 
 
  
