@@ -33,9 +33,6 @@ const sellerSchema = new mongoose.Schema({
     "acces_token": {
       "type": "Mixed"
     }
-  },
-  "orders": {
-    "type": "Array"
   }
 })
 
