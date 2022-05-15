@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const routes = require("./routes") 
 const Seller = require("./Structures/seller")
 
+
 const app = express();
 
 app.use(express.json())
@@ -26,10 +27,10 @@ io.on('testchannel', (data)=>{ io.emit("testchannel", data) })
 
 mongoose
     .connect(process.env.URI, { useNewUrlParser: true })
-	.then(() => { server.listen(process.env.PORT || 3000,(socket) => console.log('BoltPay its alive')) })
+	.then(() => { server.listen(process.env.PORT || 3000, (socket) => console.log('BoltPay its alive')) })
 
 
-async function create_seller(shopname){
+async function create_seller(){
     const seller = new Seller(
         {
             "rapyd": {
@@ -53,27 +54,26 @@ async function create_seller(shopname){
     
     seller.save().then(()=> console.log("Seller saved!")) }
 
-app.post('/create/:shopname', (req, res) => {
-  const { shopname } = req.params;
-  create_seller(shopname)
+app.post('/create/shop', (req, res) => {
+  create_seller()
   res.send({  
       "status": "ok"
   })
 });
 
-app.post('/connect/:id', (req, res) => {
-    const { id } = req.params;
-    const data = JSON.stringify(req.body);
-    console.log('post request with: '+ data)
 
-    io.emit(id, data)
-    res.send({
-        "status": "ok",
-        "data": "x " + data,
-        "send to": id
-    })
+
+
+async function create_Order(){
+  const order = new Order(
     
-});
+  )
+  
+  order.save().then(()=> console.log("Order saved!")) }
+
+
+
+
 
 
 
