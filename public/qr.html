@@ -61,8 +61,7 @@
 }
 
   function gen(){
-      //const code = uniqueId();
-      const code = "XxJxXBODmE9G8NtZeewr"
+      const code = uniqueId();
       generateQRCode(code)
       var connection = new WebSocket(`ws://${location.host}?device=web&key=${code}`);
 
