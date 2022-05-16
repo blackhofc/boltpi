@@ -1,68 +1,53 @@
 const { Timestamp } = require("mongodb")
 const mongoose = require ("mongoose")
-
 const orderSchema = new mongoose.Schema({
   "owner_shop": {
-    "default": "none",
+    "default": "",
     "type": "String"
   },
-  "payement_method": {
-    "default": "none",
+  "payment_method": {
+    "default": "",
     "type": "String"
   },
   "date": {
     "default": Math.round(+new Date()/1000),
-    "type": "Number"
+    "type": "String"
   },
   "buyer_information": {
     "identifier": {
-      "default": "none",
+      "default": "",
       "type": "String"
     },
     "full_name": {
-      "default": "none",
-      "type": "Mixed"
+      "default": "",
+      "type": "String"
     },
     "postal_code": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "province": {
-      "default": "none",
-      "type": "Mixed"
+      "default": "",
+      "type": "String"
     },
     "location": {
-      "default": "none",
-      "type": "Mixed"
+      "default": "",
+      "state": {
+        "default": "",
+        "type": "String"
+      },
+      "city": {
+        "default": "",
+        "type": "String"
+      },
+      "country": {
+        "default": "",
+        "type": "String"
+      }
     },
-    "adress": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "adress_number": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "floor_or_apartment": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "between_streets": {
-      "type": [
-        "String"
-      ]
+    "address": {
+      "default": "",
+      "type": "String"
     },
     "optional_indications": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "home_or_work": {
-      "default": "none",
-      "type": "Mixed"
-    },
-    "contact_phone": {
-      "default": "none",
-      "type": "Mixed"
+      "default": "",
+      "type": "String"
     }
   },
   "cart": {

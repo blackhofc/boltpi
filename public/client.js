@@ -1,6 +1,5 @@
 const open = document.getElementById('open');
 const modal_container = document.getElementById('modal_container');
-const pop = document.getElementById('qrcode-container');
 const close = document.getElementById('close');
 
 const qrcodeContainer = document.getElementById("qrcode");
@@ -15,13 +14,6 @@ close.addEventListener('click', () => {
   modal_container.classList.remove('show');
 });
 
-
-document.addEventListener("click", (e) => {
-  const isClosest = e.target.closest(pop);
-  if (!isClosest) {
-    modal_container.classList.remove('show');
-  }
-});
 
 
 function generateQRCode(unique_key) {
