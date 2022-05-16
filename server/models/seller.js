@@ -16,6 +16,10 @@ const sellerSchema = new mongoose.Schema({
       "default": "none",
       "type": "Mixed"
     },
+    "shop_photo": {
+      "default": "none",
+      "type": "Mixed"
+    },
     "contact_mail": {
       "default": "none",
       "type": "Mixed"

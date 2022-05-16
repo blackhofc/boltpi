@@ -1,8 +1,5 @@
 {
-  "seller_key": "bolt-key",
-  "seller_name": "Benja Store",
-  "seller_image_url": "https://guiaimpresion.com/wp-content/uploads/2020/06/Logotipo-Amazon.jpg",
-  "products": [
+ "products": [
     {
       "0": {
         "name": "Shoes",

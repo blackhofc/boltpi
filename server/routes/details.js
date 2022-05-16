@@ -9,7 +9,7 @@ router.get('/', verify, async (req, res) => {
           res.status(404).send({
             "error": {
               "code": 404,
-              "message": seller
+              "message": err
             }
           })
         } else {

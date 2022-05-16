@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const verify = require('./verifiy')
 const Order = require("../models/order")
+const Seller = require("../models/seller")
 
 router.get('/purchases', async (req, res) => {
     const { key } = req.query
@@ -19,6 +20,24 @@ router.get('/purchases', async (req, res) => {
           return res.status(200).json({"purchases": orders});
         }
       });
+});
+
+router.get('/shop/details', async (req, res) => {
+  const { shop_key } = req.query
+  if(!shop_key) return res.status(400).send({"status":"error", "message": "shop-key missing"});
+
+  Seller.findOne({ "_id": shop_key },  {"security": 0, __v: 0, rapyd: 0}, function(err, seller) {
+    if (err || !seller) {
+      res.status(404).send({
+        "error": {
+          "code": 404,
+          "message": err
+        }
+      })
+    } else {
+      return res.status(200).json(seller);
+    }
+  });
 });
 
 

@@ -6,6 +6,9 @@
   box-sizing: border-box;
 }
 
+#qrcode-container{
+  padding-bottom: 35px;
+}
 
 body {
   background-color: #edeef6;

@@ -22,7 +22,6 @@ app.use("/api/details", detailsRoute);
 app.use("/api/shop", shopRoute); 
 app.use("/api/client", clientRoute); 
 
-
 const connections = []
 
 wsServer.getUniqueID = function () {
@@ -35,34 +34,24 @@ wsServer.getUniqueID = function () {
 
 wsServer.on('request', (req) => {
     const connection = req.accept()
+    const {room} = req.resourceURL.query;
     const {device} = req.resourceURL.query
-    const {key} = req.resourceURL.query;
-    const {shopkey} = req.resourceURL.query;
 
-    connection.id = key
-    connection.reciver = shopkey
+    connection.room = room
     connection.device = device
 
     connections.push(connection)
+
     connection.on('message', (mes) => {
-      try{
-        if(connection.device == "app"){
-          const to_send = connections[connections.findIndex(x => x.id === connections[connections.findIndex(x => x.id === key)].reciver)]
-          to_send.send(mes.utf8Data)
-        }else if(connection.device == "web"){
-          const parsed = JSON.parse(mes.utf8Data);
-          const to_send = connections[connections.findIndex(x => x.id === parsed["send_to"])]
-          to_send.sendUTF(JSON.stringify(parsed["data"]));
-        }
-      }catch(err){}
-       
+      const send_to = connections[connections.findIndex(x => x.room === connection.room && x !=connection && connection.device != x.device)]
+      if(send_to) send_to.send(mes.utf8Data)
+      else connection.send(JSON.stringify({"msg":"this QR has expired or is not valid"}))
     })
     connection.on('close', (resCode, des) => {
         connections.splice(connections.indexOf(connection), 1)
     })
   
 })
-
 
 mongoose
     .connect(process.env.URI, { useNewUrlParser: true })

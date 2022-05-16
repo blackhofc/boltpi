@@ -3,11 +3,10 @@ const modal_container = document.getElementById('modal_container');
 const close = document.getElementById('close');
 
 const qrcodeContainer = document.getElementById("qrcode");
-
-connect_client(uniqueId());
+const shop_key = "6282df8e1da8f62e747ef3b0"; //shop coto
 
 open.addEventListener('click', () => {
-  modal_container.classList.add('show');  
+  connect_client(uniqueId());
 });
 
 close.addEventListener('click', () => {
@@ -27,26 +26,31 @@ function generateQRCode(unique_key) {
     correctLevel: QRCode.CorrectLevel.H
   });
   document.getElementById("qrcode-container").style.display = "block";
+  modal_container.classList.add('show');  
 }
 
-
 function connect_client(qr_key) {
-  var connection = new WebSocket(`ws://${location.host}?device=web&key=${qr_key}`);
+  var connection = new WebSocket(`ws://${location.host}?device=web&room=${qr_key}`);
   connection.onopen = function(ws, req) {
     generateQRCode(qr_key)
     connection.onmessage = function(mes) {
       try {
+        console.log(mes.data)
         const parsed = JSON.parse(mes.data);
-        switch (parsed["type"]) {
+        switch (parsed["msg"]) {
           case "scanned":
             fetch('example.json').then(response =>  response.json()).then(cart =>{ 
               connection.send(JSON.stringify({
-                "send_to": parsed["id"],
-                "type": "cart",
-                "data": cart
+                "msg": "cart",
+                "shop_key": shop_key,
+                "cart": cart
               }))
             })
-            break;
+            break; 
+          case "pucharsed":
+            modal_container.classList.remove('show');
+            alert('MUITU BRIGADO POR SU COMPRA MANITO VOCE E UM AMIGO')
+            break
         }
       } catch (err) {}
     };
