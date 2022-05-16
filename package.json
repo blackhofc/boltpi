@@ -19,7 +19,8 @@
     "mongodb": "^4.6.0",
     "mongoose": "^6.3.3",
     "nodemon": "^2.0.16",
-    "socket.io": "^4.5.0"
+    "socket.io": "^4.5.0",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@babel/helper-compilation-targets": "^7.17.10"

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const verify = require('./verifiy')
 const Order = require("../models/order")
 
-router.get('/pucharses', async (req, res) => {
+router.get('/purchases', async (req, res) => {
     const { key } = req.query
     if(!key) return res.status(400).send({"status":"error", "message": "bolt-key missing"});
 
@@ -12,17 +12,17 @@ router.get('/pucharses', async (req, res) => {
           res.status(404).send({
             "error": {
               "code": 404,
-              "message": `error while looking for pucharses`
+              "message": `error while looking for purchases`
             }
           })
         } else {
-          return res.status(200).json({"pucharses": orders});
+          return res.status(200).json({"purchases": orders});
         }
       });
 });
 
 
-router.post('/pucharse/create', async (req, res) => {
+router.post('/purchase/create', async (req, res) => {
     const order = new Order(req.body);
     order.save(function (err, schema) {
         if (err) {
