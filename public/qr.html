@@ -1,130 +1,24 @@
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <!DOCTYPE html>
 <html>
-<head>
-</head>
-<body>
-
-<div class="form">
-  <h1>Scan with your device</h1>
-
-  <div id="qrcode-container">
-    <div id="qrcode" class="qrcode"></div>
-  </div>
-
-  <button type="button" class="test" id="btn_generate"; onclick="gen()" > Pay with BoltPay </button>
-
-  <script type="text/javascript">
+  <head>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <button id="open">
+      Pagar con Bolt
+    </button>
     
-    const response = {
-  "seller_key": "bolt-key",
-  "seller_name":"Amazon",
-  "seller_image_url":"https://guiaimpresion.com/wp-content/uploads/2020/06/Logotipo-Amazon.jpg",
-  "products":[
-     {
-        "0":{
-           "name":"Shoes",
-           "description":"These are comfortable",
-           "photo_url":"https://s3.amazonaws.com/nikeinc/assets/84925/Sp19_BB_Nike_Adapt_20181218_NIKE0538_Detail5_rectangle_1600.jpg",
-           "currency":"usd",
-           "amount":"300"
-        }
-     },
-     {
-        "1":{
-           "name":    "Plant",
-           "description":"Super green",
-           "photo_url":"https://m.media-amazon.com/images/I/61PPYUoc2aL._AC_SX425_.jpg",
-           "currency":"usd",
-           "amount":"12"
-        }
-     },
-     {
-        "2":{
-           "name":"BasketBall",
-           "description":"NBA Official",
-           "photo_url":"https://www.wilson.com/es-es/media/catalog/product/6/b/6b10c76e-ea03-4a5c-b47d-2caae8da68e1_oqybhen2xxfkox94.png",
-           "currency":"usd",
-           "amount":"999"
-        }
-     },
-     {
-        "3":{
-           "name":"Candy",
-           "description":"Yummy",
-           "photo_url":"https://mindbodygreen-res.cloudinary.com/image/upload/c_fill,w_800,h_400,g_auto,q_85,fl_lossy,f_jpg/org/gti5ndttekv6zokuj.jpg",
-           "currency":"usd",
-           "amount":"10"
-        }
-     }
-  ]
-}
+    <div id="modal_container" class="modal-container">
+      <div class="modal">
+        <h1>Escanear utilizando BoltPay</h1>
+        <div id="qrcode-container">
+          <div id="qrcode" class="qrcode"></div>
+        </div>
+        <button id="close">Cerrar</button>
+      </div>
+    </div>
+    <script src="client.js"></script>
 
-  function gen(){
-      const code = uniqueId();
-      generateQRCode(code)
-      var connection = new WebSocket(`ws://${location.host}?device=web&key=${code}`);
-
-      console.log('Conectando... ');
-      connection.onopen = function (ws, req) {
-
-      console.log('Conectado! mi id: '+code);
-      //console.log('Conectado! Escuchando id: '+code);
-    
-      connection.onerror = function (error) {
-      console.log('WebSocket Error ' + error);
-      };
-  
-      connection.onmessage = function(mes) {
-          try{
-              const parsed = JSON.parse(mes.data);
-              console.log("LLEGO A PARSEAR"+parsed)
-              switch(parsed["type"]){
-                case "scanned":
-                    console.log('Me llego un mensaje y es: '+parsed+" y me lo envio el id: "+parsed["id"]);
-                    connection.send(JSON.stringify({"send_to": parsed["id"],"type":"cart", "data":response}))
-                  break;
-                case "get_info":
-                  break;
-              }
-              const { key }  = JSON.parse(mes.utf8Data)
-              if(key == code){
-                  console.log('Se recibieron datos en '+key);
-                  connection.sendUTF(JSON.stringify(response))
-              }
-          } catch(err){ }
-      };
-  };
-  
-  
-  }
-
-
-  function uniqueId() {
-      length = 20
-      var result = '';
-      var characters= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var charactersLength = characters.length;
-      for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
-  }
-
-  function generateQRCode(unique_key) {
-        const btn = document.getElementById('btn_generate').style.display="none";
-        let qrcodeContainer = document.getElementById("qrcode");
-        qrcodeContainer.innerHTML = "";
-        new QRCode(qrcodeContainer, {
-          text: unique_key,
-          width: 350,
-          height: 350,
-          colorDark: "#34d186",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H
-        });
-        document.getElementById("qrcode-container").style.display = "block";
-  }
-
-  </script>
-</div>
+  </body>
+</html>
